@@ -20,7 +20,11 @@ public class JpaPublisherRepository implements PublisherRepository {
             em = emf.createEntityManager();
 
             em.getTransaction().begin();
-            em.persist(publisher);
+            if (publisher.getId() == 0) {
+                em.persist(publisher);
+            } else {
+                em.merge(publisher);
+            }
             em.getTransaction().commit();
         } catch (Exception ex) {
             if (em != null && em.getTransaction().isActive()) {

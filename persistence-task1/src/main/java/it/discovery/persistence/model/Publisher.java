@@ -18,6 +18,7 @@ import java.util.List;
 @Table
 public class Publisher {
     @Id
+    @GeneratedValue
     private int id;
 
     private String name;
