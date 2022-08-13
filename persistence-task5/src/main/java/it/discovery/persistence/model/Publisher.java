@@ -21,6 +21,7 @@ public class Publisher {
     @GeneratedValue
     private int id;
 
+    @Column(nullable = false, length = 64)
     private String name;
 
     @Transient
