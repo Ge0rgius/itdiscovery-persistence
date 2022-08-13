@@ -9,7 +9,8 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 //@MappedSuperclass
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+//@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Inheritance(strategy = InheritanceType.JOINED)
 @Entity
 public abstract class BaseEntity {
 	@Id
