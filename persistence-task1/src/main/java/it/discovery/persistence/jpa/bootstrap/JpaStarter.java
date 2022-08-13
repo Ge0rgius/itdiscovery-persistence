@@ -1,17 +1,14 @@
 package it.discovery.persistence.jpa.bootstrap;
 
-import java.time.LocalDateTime;
-
-import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityManagerFactory;
-import jakarta.persistence.Persistence;
-
+import it.discovery.persistence.model.Book;
 import it.discovery.persistence.model.Publisher;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.Persistence;
 
 public class JpaStarter {
 
     public static void main(String[] args) {
-        EntityManagerFactory emf = Persistence
+        var emf = Persistence
                 .createEntityManagerFactory("library");
         EntityManager em = null;
         try {
@@ -20,8 +17,14 @@ public class JpaStarter {
             em.getTransaction().begin();
             Publisher publisher = new Publisher();
             publisher.setName("Packt");
-            publisher.setCreated(LocalDateTime.now());
+
             em.persist(publisher);
+
+            Book book = new Book();
+            book.setPages(100);
+            book.setName("Hibernate");
+
+            em.persist(book);
             em.getTransaction().commit();
         } catch (Exception ex) {
             ex.printStackTrace();

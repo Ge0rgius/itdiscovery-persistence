@@ -1,9 +1,6 @@
 package it.discovery.persistence.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.Transient;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,7 +25,18 @@ public class Publisher {
     @Transient
     private List<Book> books;
 
+    @Column(updatable = false)
     private LocalDateTime created;
 
     private LocalDateTime modified;
+
+    @PrePersist
+    void onPersist() {
+        created = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    void onUpdate() {
+        modified = LocalDateTime.now();
+    }
 }

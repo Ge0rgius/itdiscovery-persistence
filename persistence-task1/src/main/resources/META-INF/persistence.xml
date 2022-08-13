@@ -4,6 +4,7 @@
     <persistence-unit name="library" transaction-type="RESOURCE_LOCAL">
         <provider>org.hibernate.jpa.HibernatePersistenceProvider</provider>
         <class>it.discovery.persistence.model.Publisher</class>
+        <class>it.discovery.persistence.model.Book</class>
         <exclude-unlisted-classes>true</exclude-unlisted-classes>
         <properties>
             <property name="hibernate.dialect"
