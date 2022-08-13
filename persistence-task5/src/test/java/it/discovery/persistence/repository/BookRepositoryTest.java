@@ -2,6 +2,7 @@ package it.discovery.persistence.repository;
 
 import it.discovery.persistence.config.PersistenceConfig;
 import it.discovery.persistence.model.Book;
+import it.discovery.persistence.model.Person;
 import it.discovery.persistence.model.Publisher;
 import jakarta.persistence.PersistenceException;
 import org.junit.jupiter.api.Test;
@@ -27,6 +28,10 @@ class BookRepositoryTest {
         Publisher publisher = new Publisher();
         publisher.setName("Packt");
         book.setPublisher(publisher);
+
+        Person author = new Person();
+        author.setName("Gavin King");
+        book.setAuthor(author);
 
         bookRepository.save(book);
         assertTrue(book.getId() > 0);

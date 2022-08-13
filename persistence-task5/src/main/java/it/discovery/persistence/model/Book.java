@@ -14,7 +14,8 @@ import java.util.List;
  */
 @Getter
 @Setter
-@Table
+@Table(indexes = {@Index(name = "IND_BOOK_NAME", columnList = "name"),
+        @Index(name = "IND_BOOK_PAGES", columnList = "pages")})
 @Entity
 public class Book extends BaseEntity {
 
@@ -26,11 +27,11 @@ public class Book extends BaseEntity {
     @Column(nullable = false, length = 64)
     private String name;
 
-    @ManyToOne
+    @ManyToOne(optional = false, cascade = CascadeType.ALL)
     @JoinColumn
     private Person author;
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.ALL, optional = false)
     @JoinColumn
     private Publisher publisher;
 

@@ -20,7 +20,7 @@ import java.util.List;
 @Table
 public class Publisher extends BaseEntity {
 
-    @Column(nullable = false, length = 64)
+    @Column(nullable = false, length = 64, unique = true)
     private String name;
 
     @OneToMany(mappedBy = "publisher")
