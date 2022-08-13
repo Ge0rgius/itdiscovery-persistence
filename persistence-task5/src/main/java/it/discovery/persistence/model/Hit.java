@@ -1,13 +1,18 @@
 package it.discovery.persistence.model;
 
-import java.time.LocalDateTime;
-
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDateTime;
+
 @Getter
 @Setter
+@Table
+@Entity
 public class Hit {
+    @Id
+    @GeneratedValue
     private int id;
 
     private LocalDateTime created;
@@ -20,6 +25,8 @@ public class Hit {
 
     private LocalDateTime viewed;
 
+    @ManyToOne
+    @JoinColumn
     private Book book;
 
 }

@@ -24,7 +24,7 @@ public class Publisher {
     @Column(nullable = false, length = 64)
     private String name;
 
-    @Transient
+    @OneToMany(mappedBy = "publisher")
     private List<Book> books;
 
     @Column(updatable = false)

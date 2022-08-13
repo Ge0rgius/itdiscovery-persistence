@@ -51,4 +51,10 @@ public interface BookRepository {
 	 */
 	List<Book> findSortedBooks();
 
+	/**
+	 * @param book
+	 */
+	void save(Book book);
+
+	Book findById(int id);
 }

@@ -19,12 +19,15 @@ import java.util.List;
 @Table
 @Entity
 public class Book {
+    @Column(nullable = false, length = 64)
     private String name;
 
-    @Transient
+    @ManyToOne
+    @JoinColumn
     private Person author;
 
-    @Transient
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn
     private Publisher publisher;
 
     @Convert(converter = BookStateConverter.class)
@@ -42,7 +45,7 @@ public class Book {
     @Column(columnDefinition = "tinyint")
     private int pages;
 
-    @Transient
+    @OneToMany(mappedBy = "book")
     private List<Hit> hits;
 
     @Id

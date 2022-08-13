@@ -1,10 +1,11 @@
 package it.discovery.persistence.model;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Person who can write books, for example
@@ -13,7 +14,11 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@Table
+@Entity
 public class Person {
+    @Id
+    @GeneratedValue
     private int id;
 
     private LocalDateTime created;
@@ -25,6 +30,7 @@ public class Person {
     /**
      * Books that person has written
      */
+    @OneToMany(mappedBy = "author")
     private List<Book> books;
 
 }
