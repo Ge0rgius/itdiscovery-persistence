@@ -3,6 +3,7 @@ package it.discovery.persistence.model;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -41,6 +42,8 @@ public class Book {
 	private List<Hit> hits;
 
 	@Id
+	@GenericGenerator(name = "counter", strategy = "it.discovery.persistence.generator.AutoIncrementGenerator")
+	@GeneratedValue(generator = "counter")
 	private int id;
 
 	@Column(updatable = false)
