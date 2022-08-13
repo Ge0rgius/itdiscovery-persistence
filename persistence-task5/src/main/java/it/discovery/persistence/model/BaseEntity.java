@@ -8,7 +8,9 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@MappedSuperclass
+//@MappedSuperclass
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Entity
 public abstract class BaseEntity {
 	@Id
 	@GeneratedValue
