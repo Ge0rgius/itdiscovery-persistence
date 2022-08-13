@@ -5,7 +5,8 @@ import it.discovery.persistence.model.Book;
 import it.discovery.persistence.model.Person;
 import it.discovery.persistence.model.Publisher;
 import jakarta.persistence.PersistenceException;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,12 +19,19 @@ import static org.junit.jupiter.api.Assertions.*;
 @Transactional
 class BookRepositoryTest {
 
+//    @Autowired
+//    BookRepository bookRepository;
+
     @Autowired
+    List<BookRepository> bookRepositories;
+
     BookRepository bookRepository;
 
-    @Test
+    @ParameterizedTest
+    @ValueSource(ints = {0, 1})
         //@Commit
-    void save_bookWithPublisher_success() {
+    void save_bookWithPublisher_success(int index) {
+        bookRepository = bookRepositories.get(index);
         Book book = save();
 
         assertTrue(book.getId() > 0);
@@ -31,9 +39,11 @@ class BookRepositoryTest {
         assertNotNull(book1);
     }
 
-    @Test
+    @ParameterizedTest
+    @ValueSource(ints = {0, 1})
         //@Commit
-    void findAll_bookExists_success() {
+    void findAll_bookExists_success(int index) {
+        bookRepository = bookRepositories.get(index);
         Book book = save();
 
         List<Book> books = bookRepository.findAll();
@@ -42,9 +52,12 @@ class BookRepositoryTest {
         assertEquals(book.getId(), book1.getId());
     }
 
-    @Test
+    @ParameterizedTest
+    @ValueSource(ints = {0, 1})
         //@Commit
-    void findTotalPage_bookExists_success() {
+    void findTotalPage_bookExists_success(int index) {
+        bookRepository = bookRepositories.get(index);
+
         save();
 
         int totalPages = bookRepository.findTotalPages();
@@ -69,8 +82,10 @@ class BookRepositoryTest {
         return book;
     }
 
-    @Test
-    void save_bookWithoutName_error() {
+    @ParameterizedTest
+    @ValueSource(ints = {0, 1})
+    void save_bookWithoutName_error(int index) {
+        bookRepository = bookRepositories.get(index);
         Book book = new Book();
 
         assertThrows(PersistenceException.class, () -> bookRepository.save(book));

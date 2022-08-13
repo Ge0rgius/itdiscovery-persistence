@@ -9,18 +9,17 @@ import java.util.List;
 
 @Repository
 @Transactional(readOnly = true)
-public class SpringJpaBookRepository extends BaseSpringBookRepository {
+public class SpringNamedJpqlBookRepository extends BaseSpringBookRepository {
 
     @Override
     public List<Book> findAll() {
-        TypedQuery<Book> typedQuery = em.createQuery("FROM Book", Book.class);
-
+        TypedQuery<Book> typedQuery = em.createNamedQuery(Book.QUERY_FIND_ALL, Book.class);
         return typedQuery.getResultList();
     }
 
     @Override
     public List<Book> findWithName(String name) {
-        TypedQuery<Book> typedQuery = em.createQuery("FROM Book WHERE name=:name", Book.class);
+        TypedQuery<Book> typedQuery = em.createNamedQuery(Book.QUERY_FIND_BY_NAME, Book.class);
         return typedQuery.setParameter("name", name).getResultList();
     }
 
@@ -36,8 +35,7 @@ public class SpringJpaBookRepository extends BaseSpringBookRepository {
 
     @Override
     public int findTotalPages() {
-        TypedQuery<Long> typedQuery = em.createQuery("SELECT SUM(pages) FROM Book", Long.class);
-        return typedQuery.getSingleResult().intValue();
+        return 0;
     }
 
     @Override

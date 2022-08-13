@@ -17,7 +17,13 @@ import java.util.List;
 @Table(indexes = {@Index(name = "IND_BOOK_NAME", columnList = "name"),
         @Index(name = "IND_BOOK_PAGES", columnList = "pages")})
 @Entity
+@NamedQuery(query = "FROM Book", name = Book.QUERY_FIND_ALL)
+@NamedQuery(query = "FROM Book WHERE name=:name", name = Book.QUERY_FIND_BY_NAME)
 public class Book extends BaseEntity {
+
+    public static final String QUERY_FIND_ALL = "Book.findAll";
+
+    public static final String QUERY_FIND_BY_NAME = "Book.findByName";
 
 //    @Id
 //    @GenericGenerator(name = "counter", strategy = "it.discovery.persistence.generator.AutoIncrementGenerator")
