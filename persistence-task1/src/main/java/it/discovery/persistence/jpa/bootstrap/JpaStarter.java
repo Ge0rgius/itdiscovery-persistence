@@ -1,6 +1,7 @@
 package it.discovery.persistence.jpa.bootstrap;
 
 import it.discovery.persistence.model.Book;
+import it.discovery.persistence.model.BookState;
 import it.discovery.persistence.model.Publisher;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.Persistence;
@@ -23,6 +24,7 @@ public class JpaStarter {
             Book book = new Book();
             book.setPages(100);
             book.setName("Hibernate");
+            book.setState(BookState.ABSENT);
 
             em.persist(book);
             em.getTransaction().commit();

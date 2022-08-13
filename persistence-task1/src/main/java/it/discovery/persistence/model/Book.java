@@ -1,5 +1,6 @@
 package it.discovery.persistence.model;
 
+import it.discovery.persistence.converter.BookStateConverter;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,6 +26,9 @@ public class Book {
 
 	@Transient
 	private Publisher publisher;
+
+	@Convert(converter = BookStateConverter.class)
+	private BookState state;
 
 	/**
 	 * Publishing year
