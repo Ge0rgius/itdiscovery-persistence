@@ -1,10 +1,11 @@
 package it.discovery.persistence.model;
 
-import java.time.LocalDateTime;
-import java.util.List;
-
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * Book publisher
@@ -13,13 +14,30 @@ import lombok.Setter;
  */
 @Getter
 @Setter
+@Entity
+@Table
 public class Publisher {
+    @Id
+    @GeneratedValue
+    private int id;
+
+    private String name;
+
+    @Transient
+    private List<Book> books;
+
+    @Column(updatable = false)
     private LocalDateTime created;
 
     private LocalDateTime modified;
 
-    private String name;
+    @PrePersist
+    void onPersist() {
+        created = LocalDateTime.now();
+    }
 
-    private List<Book> books;
-
+    @PreUpdate
+    void onUpdate() {
+        modified = LocalDateTime.now();
+    }
 }

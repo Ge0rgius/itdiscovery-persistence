@@ -1,7 +1,10 @@
 package it.discovery.persistence.model;
 
+import it.discovery.persistence.converter.BookStateConverter;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.GenericGenerator;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -13,29 +16,42 @@ import java.util.List;
  */
 @Getter
 @Setter
+@Table
+@Entity
 public class Book {
-	private int id;
+    private String name;
 
-	private LocalDateTime created;
+    @Transient
+    private Person author;
 
-	private LocalDateTime modified;
+    @Transient
+    private Publisher publisher;
 
-	private String name;
+    @Convert(converter = BookStateConverter.class)
+    private BookState state;
 
-	private Person author;
+    /**
+     * Publishing year
+     */
+    @Column(name = "`year`")
+    private int year;
 
-	private Publisher publisher;
+    /**
+     * Total number of pages
+     */
+    @Column(columnDefinition = "tinyint")
+    private int pages;
 
-	/**
-	 * Publishing year
-	 */
-	private int year;
+    @Transient
+    private List<Hit> hits;
 
-	/**
-	 * Total number of pages
-	 */
-	private int pages;
+    @Id
+    @GenericGenerator(name = "counter", strategy = "it.discovery.persistence.generator.AutoIncrementGenerator")
+    @GeneratedValue(generator = "counter")
+    private int id;
 
-	private List<Hit> hits;
+    @Column(updatable = false)
+    private LocalDateTime created;
 
+    private LocalDateTime modified;
 }
