@@ -4,6 +4,7 @@ import it.discovery.persistence.model.Book;
 import it.discovery.persistence.repository.BookRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import jakarta.persistence.TypedQuery;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -17,12 +18,15 @@ public class SpringJpaBookRepository implements BookRepository {
 
     @Override
     public List<Book> findAll() {
-        return null;
+        TypedQuery<Book> typedQuery = em.createQuery("FROM Book", Book.class);
+
+        return typedQuery.getResultList();
     }
 
     @Override
     public List<Book> findWithName(String name) {
-        return null;
+        TypedQuery<Book> typedQuery = em.createQuery("FROM Book WHERE name=:name", Book.class);
+        return typedQuery.setParameter("name", name).getResultList();
     }
 
     @Override
@@ -37,7 +41,8 @@ public class SpringJpaBookRepository implements BookRepository {
 
     @Override
     public int findTotalPages() {
-        return 0;
+        TypedQuery<Long> typedQuery = em.createQuery("SELECT SUM(pages) FROM Book", Long.class);
+        return typedQuery.getSingleResult().intValue();
     }
 
     @Override

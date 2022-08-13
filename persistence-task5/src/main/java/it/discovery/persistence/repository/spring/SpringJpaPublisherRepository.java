@@ -32,6 +32,10 @@ public class SpringJpaPublisherRepository implements PublisherRepository {
 
     @Override
     public void delete(int publisherId) {
+        Publisher publisher = em.find(Publisher.class, publisherId);
+        if (publisher != null) {
+            em.remove(publisher);
+        }
 
     }
 
