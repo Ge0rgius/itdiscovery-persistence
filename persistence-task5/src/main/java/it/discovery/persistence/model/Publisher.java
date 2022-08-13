@@ -1,10 +1,12 @@
 package it.discovery.persistence.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -16,10 +18,7 @@ import java.util.List;
 @Setter
 @Entity
 @Table
-public class Publisher {
-    @Id
-    @GeneratedValue
-    private int id;
+public class Publisher extends BaseEntity {
 
     @Column(nullable = false, length = 64)
     private String name;
@@ -27,18 +26,4 @@ public class Publisher {
     @OneToMany(mappedBy = "publisher")
     private List<Book> books;
 
-    @Column(updatable = false)
-    private LocalDateTime created;
-
-    private LocalDateTime modified;
-
-    @PrePersist
-    void onPersist() {
-        created = LocalDateTime.now();
-    }
-
-    @PreUpdate
-    void onUpdate() {
-        modified = LocalDateTime.now();
-    }
 }

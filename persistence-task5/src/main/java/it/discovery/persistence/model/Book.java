@@ -4,9 +4,7 @@ import it.discovery.persistence.converter.BookStateConverter;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.annotations.GenericGenerator;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -18,7 +16,13 @@ import java.util.List;
 @Setter
 @Table
 @Entity
-public class Book {
+public class Book extends BaseEntity {
+
+//    @Id
+//    @GenericGenerator(name = "counter", strategy = "it.discovery.persistence.generator.AutoIncrementGenerator")
+//    @GeneratedValue(generator = "counter")
+//    private int id;
+
     @Column(nullable = false, length = 64)
     private String name;
 
@@ -48,13 +52,5 @@ public class Book {
     @OneToMany(mappedBy = "book")
     private List<Hit> hits;
 
-    @Id
-    @GenericGenerator(name = "counter", strategy = "it.discovery.persistence.generator.AutoIncrementGenerator")
-    @GeneratedValue(generator = "counter")
-    private int id;
 
-    @Column(updatable = false)
-    private LocalDateTime created;
-
-    private LocalDateTime modified;
 }

@@ -1,6 +1,9 @@
 package it.discovery.persistence.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -10,15 +13,7 @@ import java.time.LocalDateTime;
 @Setter
 @Table
 @Entity
-public class Hit {
-    @Id
-    @GeneratedValue
-    private int id;
-
-    private LocalDateTime created;
-
-    private LocalDateTime modified;
-
+public class Hit extends BaseEntity {
     private String ip;
 
     private String browser;

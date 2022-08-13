@@ -1,10 +1,11 @@
 package it.discovery.persistence.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Entity;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -16,14 +17,7 @@ import java.util.List;
 @Setter
 @Table
 @Entity
-public class Person {
-    @Id
-    @GeneratedValue
-    private int id;
-
-    private LocalDateTime created;
-
-    private LocalDateTime modified;
+public class Person extends BaseEntity {
 
     private String name;
 
