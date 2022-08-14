@@ -48,6 +48,5 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
 			""")
 	Book findWithHits(@Param("id") int id);
 
-	@Query("SELECT new it.discovery.persistence.model.tuple.BookInfo(id,name) FROM Book")
-	List<BookInfo> findBookInfo();
+	List<BookInfo> findBy();
 }

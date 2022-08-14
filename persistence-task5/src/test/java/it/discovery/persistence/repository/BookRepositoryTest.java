@@ -141,11 +141,11 @@ class BookRepositoryTest {
 
     @Test
     void findBookInfo_bookExists_success() {
-        int count = bookRepository.findBookInfo().size();
+        int count = bookRepository.findBy().size();
 
         Book book = save();
 
-        List<BookInfo> books = bookRepository.findBookInfo();
+        List<BookInfo> books = bookRepository.findBy();
         assertEquals(count + 1, books.size());
         BookInfo info = books.get(0);
         assertEquals("Hibernate with JPA 3", info.name());
