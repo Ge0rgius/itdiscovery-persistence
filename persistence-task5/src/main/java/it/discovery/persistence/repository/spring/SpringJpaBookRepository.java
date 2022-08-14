@@ -2,6 +2,7 @@ package it.discovery.persistence.repository.spring;
 
 import it.discovery.persistence.model.Book;
 import jakarta.persistence.TypedQuery;
+import org.hibernate.jpa.AvailableHints;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -20,6 +21,7 @@ public class SpringJpaBookRepository extends BaseSpringBookRepository {
     @Override
     public List<Book> findWithName(String name) {
         TypedQuery<Book> typedQuery = em.createQuery("FROM Book WHERE name=:name", Book.class);
+        typedQuery.setHint(AvailableHints.HINT_CACHEABLE, true);
         return typedQuery.setParameter("name", name).getResultList();
     }
 

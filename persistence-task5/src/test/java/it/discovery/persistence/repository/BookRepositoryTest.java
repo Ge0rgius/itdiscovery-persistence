@@ -8,6 +8,7 @@ import it.discovery.persistence.model.Publisher;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.PersistenceException;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
@@ -21,6 +22,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 @SpringJUnitConfig(PersistenceConfig.class)
 //@Transactional
+@Slf4j
 class BookRepositoryTest {
 
     @Autowired
@@ -130,6 +132,19 @@ class BookRepositoryTest {
         List<Hit> hits = book1.getHits();
         Hit hit = hits.get(0);
         assertEquals("Chrome", hit.getBrowser());
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {0, 1})
+    void findWithName_bookExists_success(int index) {
+        bookRepository = bookRepositories.get(index);
+        log.info("Book repository: " + bookRepository.getClass());
+
+        Book book = save();
+
+        List<Book> books = bookRepository.findWithName(book.getName());
+        assertTrue(books.size() > 0);
+        bookRepository.findWithName(book.getName());
     }
 
     @Nested
