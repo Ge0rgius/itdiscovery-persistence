@@ -25,8 +25,7 @@ class PublisherRepositoryTest {
     void save_validPublisher_success() {
         Publisher publisher = new Publisher();
         publisher.setName("Packt");
-        publisher.setAddress(new Address());
-        publisher.getAddress().setApartment(101);
+        publisher.setAddress(Address.builder().apartment(101).build());
 
         publisherRepository.save(publisher);
         assertTrue(publisher.getId() > 0);
