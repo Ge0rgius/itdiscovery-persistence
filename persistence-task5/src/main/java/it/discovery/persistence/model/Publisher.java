@@ -1,9 +1,6 @@
 package it.discovery.persistence.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Cache;
@@ -28,5 +25,8 @@ public class Publisher extends BaseEntity {
 
     @OneToMany(mappedBy = "publisher")
     private List<Book> books;
+
+    @Embedded
+    private Address address;
 
 }

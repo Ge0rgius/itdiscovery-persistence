@@ -1,6 +1,7 @@
 package it.discovery.persistence.repository;
 
 import it.discovery.persistence.config.PersistenceConfig;
+import it.discovery.persistence.model.Address;
 import it.discovery.persistence.model.Publisher;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
@@ -24,11 +25,14 @@ class PublisherRepositoryTest {
     void save_validPublisher_success() {
         Publisher publisher = new Publisher();
         publisher.setName("Packt");
+        publisher.setAddress(new Address());
+        publisher.getAddress().setApartment(101);
 
         publisherRepository.save(publisher);
         assertTrue(publisher.getId() > 0);
         Publisher publisher1 = publisherRepository.findById(publisher.getId());
         assertNotNull(publisher1);
+        assertEquals(101, publisher1.getAddress().getApartment());
         publisher1.setName("Apres");
         publisherRepository.save(publisher1);
         Publisher publisher2 = publisherRepository.findById(publisher.getId());
