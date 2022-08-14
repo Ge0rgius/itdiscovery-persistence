@@ -4,6 +4,7 @@ import it.discovery.persistence.converter.BookStateConverter;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
 
@@ -28,6 +29,7 @@ import java.util.List;
         """, name = Book.QUERY_FIND_WITH_HITS)
 @DynamicInsert
 @DynamicUpdate
+@org.hibernate.annotations.Cache(usage = CacheConcurrencyStrategy.READ_WRITE)
 public class Book extends BaseEntity {
 
     public static final String QUERY_FIND_ALL = "Book.findAll";

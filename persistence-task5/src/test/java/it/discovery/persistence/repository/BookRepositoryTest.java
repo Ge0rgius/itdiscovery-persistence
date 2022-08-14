@@ -8,19 +8,19 @@ import it.discovery.persistence.model.Publisher;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.PersistenceException;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Commit;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringJUnitConfig(PersistenceConfig.class)
-@Transactional
+//@Transactional
 class BookRepositoryTest {
 
     @Autowired
@@ -130,5 +130,21 @@ class BookRepositoryTest {
         List<Hit> hits = book1.getHits();
         Hit hit = hits.get(0);
         assertEquals("Chrome", hit.getBrowser());
+    }
+
+    @Nested
+    public class CacheTests {
+        @ParameterizedTest
+        @ValueSource(ints = {0, 1})
+        void findById_bookWithHits_success(int index) {
+            bookRepository = bookRepositories.get(index);
+
+            Book book = save();
+
+            Book book1 = bookRepository.findById(book.getId());
+            assertNotNull(book1);
+            Book book2 = bookRepository.findById(book.getId());
+        }
+
     }
 }

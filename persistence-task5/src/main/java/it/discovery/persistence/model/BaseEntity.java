@@ -8,10 +8,10 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-//@MappedSuperclass
+@MappedSuperclass
 //@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-@Inheritance(strategy = InheritanceType.JOINED)
-@Entity
+//@Inheritance(strategy = InheritanceType.JOINED)
+//@Entity
 public abstract class BaseEntity {
 	@Id
 	@GeneratedValue

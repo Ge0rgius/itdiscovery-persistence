@@ -2,16 +2,19 @@ package it.discovery.persistence.repository;
 
 import it.discovery.persistence.config.PersistenceConfig;
 import it.discovery.persistence.model.Publisher;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.PersistenceException;
+import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
-import org.springframework.transaction.annotation.Transactional;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringJUnitConfig(PersistenceConfig.class)
-@Transactional
+//@Transactional
 class PublisherRepositoryTest {
 
     @Autowired
@@ -37,5 +40,34 @@ class PublisherRepositoryTest {
         Publisher publisher = new Publisher();
 
         assertThrows(PersistenceException.class, () -> publisherRepository.save(publisher));
+    }
+
+    @Nested
+    public class CacheTests {
+
+        @Autowired
+        EntityManagerFactory emf;
+
+        @PersistenceContext
+        EntityManager em;
+
+        @Test
+        void findById_validPublisher_cached() {
+            Publisher publisher = new Publisher();
+            publisher.setName("Packt");
+
+            publisherRepository.save(publisher);
+
+            //TODO check that publisher is taken from cache
+//            boolean success = publisherRepository.rename("Apress", publisher.getId());
+//            assertTrue(success);
+
+            assertTrue(emf.getCache().contains(Publisher.class, publisher.getId()));
+
+            Publisher publisher1 = publisherRepository.findById(publisher.getId());
+            assertNotNull(publisher1);
+            assertEquals("Packt", publisher1.getName());
+        }
+
     }
 }

@@ -1,8 +1,8 @@
 package it.discovery.persistence.repository;
 
-import java.util.List;
-
 import it.discovery.persistence.model.Publisher;
+
+import java.util.List;
 
 public interface PublisherRepository {
 
@@ -35,4 +35,6 @@ public interface PublisherRepository {
      * @return
      */
     Publisher findById(int publisherId);
+
+    boolean rename(String name, int id);
 }
