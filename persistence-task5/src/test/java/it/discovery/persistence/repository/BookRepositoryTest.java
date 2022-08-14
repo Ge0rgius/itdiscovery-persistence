@@ -1,6 +1,6 @@
 package it.discovery.persistence.repository;
 
-import it.discovery.persistence.config.PersistenceConfig;
+import it.discovery.persistence.PersistenceApplication;
 import it.discovery.persistence.model.*;
 import it.discovery.persistence.model.tuple.BookInfo;
 import jakarta.persistence.EntityManager;
@@ -19,7 +19,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringJUnitConfig(PersistenceConfig.class)
+@SpringJUnitConfig(PersistenceApplication.class)
 //@Transactional
 @Slf4j
 class BookRepositoryTest {

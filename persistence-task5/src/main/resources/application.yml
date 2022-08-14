@@ -1,0 +1,12 @@
+spring:
+  jpa:
+    database: H2
+    show-sql: true
+    properties:
+      hibernate:
+        ddl-auto: update
+        cache:
+          region:
+            factory_class: org.hibernate.cache.jcache.internal.JCacheRegionFactory
+          use_second_level_cache: true
+          use_query_cache: true

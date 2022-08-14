@@ -1,6 +1,6 @@
 package it.discovery.persistence.repository;
 
-import it.discovery.persistence.config.PersistenceConfig;
+import it.discovery.persistence.PersistenceApplication;
 import it.discovery.persistence.model.Address;
 import it.discovery.persistence.model.Publisher;
 import jakarta.persistence.EntityManager;
@@ -14,7 +14,7 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringJUnitConfig(PersistenceConfig.class)
+@SpringJUnitConfig(PersistenceApplication.class)
 //@Transactional
 class PublisherRepositoryTest {
 
