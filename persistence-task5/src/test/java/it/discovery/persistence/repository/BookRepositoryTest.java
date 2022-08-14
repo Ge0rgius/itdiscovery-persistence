@@ -2,12 +2,16 @@ package it.discovery.persistence.repository;
 
 import it.discovery.persistence.config.PersistenceConfig;
 import it.discovery.persistence.model.Book;
+import it.discovery.persistence.model.Hit;
 import it.discovery.persistence.model.Person;
 import it.discovery.persistence.model.Publisher;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.PersistenceException;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.annotation.Commit;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,13 +23,13 @@ import static org.junit.jupiter.api.Assertions.*;
 @Transactional
 class BookRepositoryTest {
 
-//    @Autowired
-//    BookRepository bookRepository;
-
     @Autowired
     List<BookRepository> bookRepositories;
 
     BookRepository bookRepository;
+
+    @PersistenceContext
+    EntityManager em;
 
     @ParameterizedTest
     @ValueSource(ints = {0, 1})
@@ -50,6 +54,9 @@ class BookRepositoryTest {
         assertEquals(1, books.size());
         Book book1 = books.get(0);
         assertEquals(book.getId(), book1.getId());
+        assertFalse(book.getHits().isEmpty());
+        Hit hit = book.getHits().get(0);
+        assertEquals("Chrome", hit.getBrowser());
     }
 
     @ParameterizedTest
@@ -77,6 +84,11 @@ class BookRepositoryTest {
         author.setName("Gavin King");
         book.setAuthor(author);
 
+        Hit hit = new Hit();
+        hit.setBrowser("Chrome");
+        hit.setIp("127.0.0.1");
+        book.addHit(hit);
+
         bookRepository.save(book);
 
         return book;
@@ -89,5 +101,34 @@ class BookRepositoryTest {
         Book book = new Book();
 
         assertThrows(PersistenceException.class, () -> bookRepository.save(book));
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {0, 1})
+    void findById_bookWithHits_success(int index) {
+        bookRepository = bookRepositories.get(index);
+
+        Book book = save();
+
+        Book book1 = bookRepository.findById(book.getId());
+        assertNotNull(book1);
+        List<Hit> hits = book1.getHits();
+        Hit hit = hits.get(0);
+        assertEquals("Chrome", hit.getBrowser());
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {0, 1})
+    @Commit
+    void findWithHits_bookWithHits_success(int index) {
+        bookRepository = bookRepositories.get(index);
+
+        Book book = save();
+
+        Book book1 = bookRepository.findWithHits(book.getId());
+        assertNotNull(book1);
+        List<Hit> hits = book1.getHits();
+        Hit hit = hits.get(0);
+        assertEquals("Chrome", hit.getBrowser());
     }
 }

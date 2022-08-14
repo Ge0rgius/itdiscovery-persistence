@@ -4,7 +4,10 @@ import it.discovery.persistence.converter.BookStateConverter;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.DynamicInsert;
+import org.hibernate.annotations.DynamicUpdate;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -19,11 +22,18 @@ import java.util.List;
 @Entity
 @NamedQuery(query = "FROM Book", name = Book.QUERY_FIND_ALL)
 @NamedQuery(query = "FROM Book WHERE name=:name", name = Book.QUERY_FIND_BY_NAME)
+@NamedQuery(query = """
+        SELECT b FROM Book b LEFT JOIN FETCH
+        b.hits h WHERE b.id=:id
+        """, name = Book.QUERY_FIND_WITH_HITS)
+@DynamicInsert
+@DynamicUpdate
 public class Book extends BaseEntity {
 
     public static final String QUERY_FIND_ALL = "Book.findAll";
 
     public static final String QUERY_FIND_BY_NAME = "Book.findByName";
+    public static final String QUERY_FIND_WITH_HITS = "Book.findWithHits";
 
 //    @Id
 //    @GenericGenerator(name = "counter", strategy = "it.discovery.persistence.generator.AutoIncrementGenerator")
@@ -48,16 +58,25 @@ public class Book extends BaseEntity {
      * Publishing year
      */
     @Column(name = "`year`")
-    private int year;
+    private Integer year;
 
     /**
      * Total number of pages
      */
     @Column(columnDefinition = "tinyint")
-    private int pages;
+    private Integer pages;
 
-    @OneToMany(mappedBy = "book")
+    @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
     private List<Hit> hits;
+
+    public void addHit(Hit hit) {
+        if (hits == null) {
+            hits = new ArrayList<>();
+        }
+        hit.setBook(this);
+        hits.add(hit);
+
+    }
 
 
 }

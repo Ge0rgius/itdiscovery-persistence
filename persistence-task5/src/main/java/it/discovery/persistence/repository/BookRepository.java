@@ -57,4 +57,6 @@ public interface BookRepository {
 	void save(Book book);
 
 	Book findById(int id);
+
+	Book findWithHits(int id);
 }

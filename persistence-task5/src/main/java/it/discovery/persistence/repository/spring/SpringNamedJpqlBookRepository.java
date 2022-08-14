@@ -3,12 +3,11 @@ package it.discovery.persistence.repository.spring;
 import it.discovery.persistence.model.Book;
 import jakarta.persistence.TypedQuery;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Repository
-@Transactional(readOnly = true)
+//@Transactional(readOnly = true)
 public class SpringNamedJpqlBookRepository extends BaseSpringBookRepository {
 
     @Override
@@ -41,6 +40,17 @@ public class SpringNamedJpqlBookRepository extends BaseSpringBookRepository {
     @Override
     public List<Book> findSortedBooks() {
         return null;
+    }
+
+    @Override
+    public Book findWithHits(int id) {
+        TypedQuery<Book> typedQuery = em.createNamedQuery(Book.QUERY_FIND_WITH_HITS, Book.class);
+        List<Book> books = typedQuery.setParameter("id", id).getResultList();
+        if (books.isEmpty()) {
+            return null;
+        } else {
+            return books.get(0);
+        }
     }
 
 }
