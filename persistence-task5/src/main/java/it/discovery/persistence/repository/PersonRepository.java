@@ -1,8 +1,8 @@
 package it.discovery.persistence.repository;
 
-import java.util.List;
-
 import it.discovery.persistence.model.Person;
+
+import java.util.List;
 
 public interface PersonRepository {
 

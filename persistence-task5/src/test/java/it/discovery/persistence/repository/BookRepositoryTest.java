@@ -5,12 +5,11 @@ import it.discovery.persistence.model.*;
 import it.discovery.persistence.model.tuple.BookInfo;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.PersistenceException;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Nested;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.annotation.Commit;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import org.springframework.transaction.annotation.Transactional;
@@ -25,30 +24,24 @@ import static org.junit.jupiter.api.Assertions.*;
 class BookRepositoryTest {
 
     @Autowired
-    List<BookRepository> bookRepositories;
-
     BookRepository bookRepository;
 
     @PersistenceContext
     EntityManager em;
 
-    @ParameterizedTest
-    @ValueSource(ints = {0, 1})
+    @Test
         //@Commit
-    void save_bookWithPublisher_success(int index) {
-        bookRepository = bookRepositories.get(index);
+    void save_bookWithPublisher_success() {
         Book book = save();
 
         assertTrue(book.getId() > 0);
-        Book book1 = bookRepository.findById(book.getId());
+        Book book1 = bookRepository.findById(book.getId()).orElseThrow();
         assertNotNull(book1);
     }
 
-    @ParameterizedTest
-    @ValueSource(ints = {0, 1})
+    @Test
         //@Commit
-    void findAll_bookExists_success(int index) {
-        bookRepository = bookRepositories.get(index);
+    void findAll_bookExists_success() {
         Book book = save();
 
         List<Book> books = bookRepository.findAll();
@@ -60,12 +53,9 @@ class BookRepositoryTest {
         assertEquals("Chrome", hit.getBrowser());
     }
 
-    @ParameterizedTest
-    @ValueSource(ints = {0, 1})
+    @Test
         //@Commit
-    void findTotalPage_bookExists_success(int index) {
-        bookRepository = bookRepositories.get(index);
-
+    void findTotalPage_bookExists_success() {
         save();
 
         int totalPages = bookRepository.findTotalPages();
@@ -96,27 +86,22 @@ class BookRepositoryTest {
         return book;
     }
 
-    @ParameterizedTest
-    @ValueSource(ints = {0, 1})
-    void save_bookWithoutName_error(int index) {
-        bookRepository = bookRepositories.get(index);
+    @Test
+    void save_bookWithoutName_error() {
         Book book = new Book();
 
-        assertThrows(PersistenceException.class, () -> bookRepository.save(book));
+        assertThrows(DataIntegrityViolationException.class, () -> bookRepository.save(book));
     }
 
-    @ParameterizedTest
-    @ValueSource(ints = {0, 1})
+    @Test
     @Transactional
-    void findById_bookWithHits_success(int index) {
-        bookRepository = bookRepositories.get(index);
-
+    void findById_bookWithHits_success() {
         Book book = save();
 
         em.flush();
         em.clear();
 
-        Book book1 = bookRepository.findById(book.getId());
+        Book book1 = bookRepository.findById(book.getId()).orElseThrow();
         assertNotNull(book1);
         assertEquals(1, book1.getHitCount());
         List<Hit> hits = book1.getHits();
@@ -124,12 +109,9 @@ class BookRepositoryTest {
         assertEquals("Chrome", hit.getBrowser());
     }
 
-    @ParameterizedTest
-    @ValueSource(ints = {0, 1})
+    @Test
     @Commit
-    void findWithHits_bookWithHits_success(int index) {
-        bookRepository = bookRepositories.get(index);
-
+    void findWithHits_bookWithHits_success() {
         Book book = save();
 
         Book book1 = bookRepository.findWithHits(book.getId());
@@ -139,23 +121,26 @@ class BookRepositoryTest {
         assertEquals("Chrome", hit.getBrowser());
     }
 
-    @ParameterizedTest
-    @ValueSource(ints = {0, 1})
-    void findWithName_bookExists_success(int index) {
-        bookRepository = bookRepositories.get(index);
-
+    @Test
+    void findWithName_bookExists_success() {
         Book book = save();
 
-        List<Book> books = bookRepository.findWithName(book.getName());
+        List<Book> books = bookRepository.findByName(book.getName());
         assertTrue(books.size() > 0);
-        bookRepository.findWithName(book.getName());
+        bookRepository.findByName(book.getName());
     }
 
-    @ParameterizedTest
-    @ValueSource(ints = {0, 1})
-    void findBookInfo_bookExists_success(int index) {
-        bookRepository = bookRepositories.get(index);
+    @Test
+    void findByPagesGreaterThan_bookExists_success() {
+        Book book = save();
 
+        List<Book> books = bookRepository.findByPagesGreaterThan(50);
+        assertTrue(books.size() > 0);
+    }
+
+
+    @Test
+    void findBookInfo_bookExists_success() {
         int count = bookRepository.findBookInfo().size();
 
         Book book = save();
@@ -168,16 +153,13 @@ class BookRepositoryTest {
 
     @Nested
     public class CacheTests {
-        @ParameterizedTest
-        @ValueSource(ints = {0, 1})
-        void findById_bookWithHits_success(int index) {
-            bookRepository = bookRepositories.get(index);
-
+        @Test
+        void findById_bookWithHits_success() {
             Book book = save();
 
-            Book book1 = bookRepository.findById(book.getId());
+            Book book1 = bookRepository.findById(book.getId()).orElseThrow();
             assertNotNull(book1);
-            Book book2 = bookRepository.findById(book.getId());
+            Book book2 = bookRepository.findById(book.getId()).orElseThrow();
         }
 
     }
