@@ -68,14 +68,14 @@ public class Book extends BaseEntity {
     /**
      * Total number of pages
      */
-    @Column(columnDefinition = "tinyint")
+    @Column(columnDefinition = "smallint")
     private Integer pages;
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
     private List<Hit> hits;
 
     @Formula("(SELECT COUNT(h.*) FROM HIT h WHERE h.BOOK_ID = ID)")
-    private int hitCount;
+    private Integer hitCount;
 
     public void addHit(Hit hit) {
         if (hits == null) {
