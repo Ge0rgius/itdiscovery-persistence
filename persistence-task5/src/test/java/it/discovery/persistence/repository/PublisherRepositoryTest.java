@@ -6,10 +6,10 @@ import it.discovery.persistence.model.Publisher;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.PersistenceContext;
-import jakarta.persistence.PersistenceException;
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -29,20 +29,21 @@ class PublisherRepositoryTest {
 
         publisherRepository.save(publisher);
         assertTrue(publisher.getId() > 0);
-        Publisher publisher1 = publisherRepository.findById(publisher.getId());
+        Publisher publisher1 = publisherRepository.findById(publisher.getId()).orElseThrow();
         assertNotNull(publisher1);
         assertEquals(101, publisher1.getAddress().getApartment());
         publisher1.setName("Apres");
         publisherRepository.save(publisher1);
-        Publisher publisher2 = publisherRepository.findById(publisher.getId());
+        Publisher publisher2 = publisherRepository.findById(publisher.getId()).orElseThrow();
         assertEquals("Apres", publisher2.getName());
     }
 
     @Test
     void save_publisherWithoutName_error() {
         Publisher publisher = new Publisher();
+        publisher.setAddress(Address.builder().apartment(100).build());
 
-        assertThrows(PersistenceException.class, () -> publisherRepository.save(publisher));
+        assertThrows(DataIntegrityViolationException.class, () -> publisherRepository.save(publisher));
     }
 
     @Nested
@@ -58,6 +59,7 @@ class PublisherRepositoryTest {
         void findById_validPublisher_cached() {
             Publisher publisher = new Publisher();
             publisher.setName("Packt");
+            publisher.setAddress(Address.builder().apartment(102).build());
 
             publisherRepository.save(publisher);
 
@@ -67,7 +69,7 @@ class PublisherRepositoryTest {
 
             assertTrue(emf.getCache().contains(Publisher.class, publisher.getId()));
 
-            Publisher publisher1 = publisherRepository.findById(publisher.getId());
+            Publisher publisher1 = publisherRepository.findById(publisher.getId()).orElseThrow();
             assertNotNull(publisher1);
             assertEquals("Packt", publisher1.getName());
         }
