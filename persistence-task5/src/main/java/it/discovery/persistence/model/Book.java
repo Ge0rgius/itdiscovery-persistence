@@ -7,6 +7,7 @@ import lombok.Setter;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
 import org.hibernate.annotations.DynamicInsert;
 import org.hibernate.annotations.DynamicUpdate;
+import org.hibernate.annotations.Formula;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -70,6 +71,9 @@ public class Book extends BaseEntity {
 
     @OneToMany(mappedBy = "book", cascade = CascadeType.ALL)
     private List<Hit> hits;
+
+    @Formula("(SELECT COUNT(h.*) FROM HIT h WHERE h.BOOK_ID = ID)")
+    private int hitCount;
 
     public void addHit(Hit hit) {
         if (hits == null) {

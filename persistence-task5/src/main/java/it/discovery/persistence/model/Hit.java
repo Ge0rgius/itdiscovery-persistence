@@ -23,7 +23,7 @@ public class Hit extends BaseEntity {
     private LocalDateTime viewed;
 
     @ManyToOne
-    @JoinColumn
+    @JoinColumn(name = "bookId")
     private Book book;
 
 }

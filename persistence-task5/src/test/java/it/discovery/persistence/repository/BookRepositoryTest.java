@@ -1,10 +1,7 @@
 package it.discovery.persistence.repository;
 
 import it.discovery.persistence.config.PersistenceConfig;
-import it.discovery.persistence.model.Book;
-import it.discovery.persistence.model.Hit;
-import it.discovery.persistence.model.Person;
-import it.discovery.persistence.model.Publisher;
+import it.discovery.persistence.model.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.PersistenceException;
@@ -15,6 +12,7 @@ import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.annotation.Commit;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -80,6 +78,7 @@ class BookRepositoryTest {
 
         Publisher publisher = new Publisher();
         publisher.setName("Packt");
+        publisher.setAddress(Address.builder().apartment(100).build());
         book.setPublisher(publisher);
 
         Person author = new Person();
@@ -107,13 +106,18 @@ class BookRepositoryTest {
 
     @ParameterizedTest
     @ValueSource(ints = {0, 1})
+    @Transactional
     void findById_bookWithHits_success(int index) {
         bookRepository = bookRepositories.get(index);
 
         Book book = save();
 
+        em.flush();
+        em.clear();
+
         Book book1 = bookRepository.findById(book.getId());
         assertNotNull(book1);
+        assertEquals(1, book1.getHitCount());
         List<Hit> hits = book1.getHits();
         Hit hit = hits.get(0);
         assertEquals("Chrome", hit.getBrowser());
