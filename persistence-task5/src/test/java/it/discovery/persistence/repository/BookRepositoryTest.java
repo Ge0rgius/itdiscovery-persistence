@@ -2,6 +2,7 @@ package it.discovery.persistence.repository;
 
 import it.discovery.persistence.config.PersistenceConfig;
 import it.discovery.persistence.model.*;
+import it.discovery.persistence.model.tuple.BookInfo;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.PersistenceException;
@@ -142,13 +143,27 @@ class BookRepositoryTest {
     @ValueSource(ints = {0, 1})
     void findWithName_bookExists_success(int index) {
         bookRepository = bookRepositories.get(index);
-        log.info("Book repository: " + bookRepository.getClass());
 
         Book book = save();
 
         List<Book> books = bookRepository.findWithName(book.getName());
         assertTrue(books.size() > 0);
         bookRepository.findWithName(book.getName());
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {0, 1})
+    void findBookInfo_bookExists_success(int index) {
+        bookRepository = bookRepositories.get(index);
+
+        int count = bookRepository.findBookInfo().size();
+
+        Book book = save();
+
+        List<BookInfo> books = bookRepository.findBookInfo();
+        assertEquals(count + 1, books.size());
+        BookInfo info = books.get(0);
+        assertEquals("Hibernate with JPA 3", info.name());
     }
 
     @Nested

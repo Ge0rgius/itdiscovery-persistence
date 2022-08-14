@@ -1,6 +1,7 @@
 package it.discovery.persistence.repository.spring;
 
 import it.discovery.persistence.model.Book;
+import it.discovery.persistence.model.tuple.BookInfo;
 import jakarta.persistence.TypedQuery;
 import org.springframework.stereotype.Repository;
 
@@ -51,6 +52,13 @@ public class SpringNamedJpqlBookRepository extends BaseSpringBookRepository {
         } else {
             return books.get(0);
         }
+    }
+
+    @Override
+    public List<BookInfo> findBookInfo() {
+        TypedQuery<BookInfo> typedQuery = em.createNamedQuery(
+                Book.QUERY_FIND_INFO, BookInfo.class);
+        return typedQuery.getResultList();
     }
 
 }

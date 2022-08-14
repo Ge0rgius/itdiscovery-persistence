@@ -1,6 +1,7 @@
 package it.discovery.persistence.repository;
 
 import it.discovery.persistence.model.Book;
+import it.discovery.persistence.model.tuple.BookInfo;
 
 import java.util.List;
 
@@ -59,4 +60,6 @@ public interface BookRepository {
 	Book findById(int id);
 
 	Book findWithHits(int id);
+
+	List<BookInfo> findBookInfo();
 }

@@ -24,6 +24,7 @@ import java.util.List;
 @Entity
 @NamedQuery(query = "FROM Book", name = Book.QUERY_FIND_ALL)
 @NamedQuery(query = "FROM Book WHERE name=:name", name = Book.QUERY_FIND_BY_NAME)
+@NamedQuery(query = "SELECT new it.discovery.persistence.model.tuple.BookInfo(id,name) FROM Book", name = Book.QUERY_FIND_INFO)
 @NamedQuery(query = """
         SELECT b FROM Book b LEFT JOIN FETCH
         b.hits h WHERE b.id=:id
@@ -37,6 +38,7 @@ public class Book extends BaseEntity {
 
     public static final String QUERY_FIND_BY_NAME = "Book.findByName";
     public static final String QUERY_FIND_WITH_HITS = "Book.findWithHits";
+    public static final String QUERY_FIND_INFO = "Book.findInfo";
 
 //    @Id
 //    @GenericGenerator(name = "counter", strategy = "it.discovery.persistence.generator.AutoIncrementGenerator")
